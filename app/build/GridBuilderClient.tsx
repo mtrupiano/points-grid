@@ -4,8 +4,10 @@ import { ClipboardEvent, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button, TextField } from "@mui/material";
 import PlayerInput from "./PlayerInput";
-import generateGrid from "./generateGrid";
 import { playerStateVar } from "./types";
+import { saveGrid } from "./actions/saveGrid";
+import drawGrid from "../lib/drawGrid";
+import calculateGrid from "../lib/calculateGrid";
 
 const initPlayersArr = (numPlayers: number): playerStateVar[] => {
   return Array.from({ length: numPlayers }, (_, i) => ({
@@ -30,6 +32,7 @@ export default function GridBuilderClient() {
   const [homeTeam, setHomeTeam] = useState("Home");
   const [awayTeam, setAwayTeam] = useState("Away");
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [savedGridId, setSavedGridId] = useState(null);
 
   const handleChangePlayerName = (idx: number) => (newPlayerName: string) => {
     players[idx].name = newPlayerName;
@@ -78,9 +81,17 @@ export default function GridBuilderClient() {
     setTrueNumPlayers(formatted.length);
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     const canvas = canvasRef?.current;
-    if (canvas) generateGrid(canvas, players, homeTeam, awayTeam);
+    const grid = calculateGrid(players);
+    if (canvas) drawGrid(canvas, { homeTeam, awayTeam, grid });
+    const result = await saveGrid({
+      homeTeam,
+      awayTeam,
+      grid,
+    });
+    console.log({ result });
+    setSavedGridId(result.data[0].id);
   };
 
   const saveImage = () => {
@@ -136,6 +147,9 @@ export default function GridBuilderClient() {
         Generate
       </Button>
       <Button onClick={saveImage}>Save</Button>
+      {savedGridId && (
+        <Button href={`/grid/${savedGridId}`}>View your grid here</Button>
+      )}
       <canvas ref={canvasRef} />
     </div>
   );

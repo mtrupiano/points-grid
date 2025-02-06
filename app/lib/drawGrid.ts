@@ -1,11 +1,12 @@
-import calculateGrid from "../lib/calculateGrid";
-import { playerStateVar } from "./types";
-export default function generateGrid(
+export default function drawGrid(
   canvas: HTMLCanvasElement,
-  players: playerStateVar[],
-  homeTeam: string = "Home",
-  awayTeam: string = "Away",
+  data: {
+    homeTeam: string;
+    awayTeam: string;
+    grid: string[][];
+  },
 ) {
+  const { homeTeam, awayTeam, grid } = data;
   const squareSize = 100;
   const overallSize = 10 * squareSize;
   const offset = 100;
@@ -60,14 +61,13 @@ export default function generateGrid(
       );
     }
 
-    const grid = calculateGrid(players);
     context.font = "12px Arial";
     let x = offset + squareSize / 2;
     let y = offset + squareSize / 2;
     for (let i = 0; i < 10; i++) {
       x = offset + squareSize / 2;
       for (let j = 0; j < 10; j++) {
-        context.fillText(grid[i * 10 + j], x, y);
+        context.fillText(grid[i][j], x, y);
         x += squareSize;
       }
       y += squareSize;
