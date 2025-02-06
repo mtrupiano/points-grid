@@ -27,8 +27,8 @@ export default function GridBuilderClient() {
   const [players, setPlayers] = useState<playerStateVar[]>(
     initPlayersArr(numPlayers),
   );
-  const [homeTeam, setHomeTeam] = useState("");
-  const [awayTeam, setAwayTeam] = useState("");
+  const [homeTeam, setHomeTeam] = useState("Home");
+  const [awayTeam, setAwayTeam] = useState("Away");
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const handleChangePlayerName = (idx: number) => (newPlayerName: string) => {
