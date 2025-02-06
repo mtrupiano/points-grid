@@ -1,15 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 export default function Home() {
   const [numPlayers, setNumPlayers] = useState(2);
-  const handleChange = (e: Event) => {
-    if (numPlayers === 0) {
-      setNumPlayers(parseInt(e.target.value));
-    }
-    if (e.target.value === "") {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e?.target?.value) {
       setNumPlayers(0);
     } else {
       setNumPlayers(parseInt(e.target.value));

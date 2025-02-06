@@ -1,30 +1,26 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { ClipboardEvent, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button, TextField } from "@mui/material";
 import PlayerInput from "./PlayerInput";
 import generateGrid from "./generateGrid";
+import { playerStateVar } from "./types";
 
-type playerStateVar = {
-  name: string;
-  numSquares: number;
-};
-
-const initPlayersArr = (numPlayers: number): [playerStateVar] => {
+const initPlayersArr = (numPlayers: number): playerStateVar[] => {
   return Array.from({ length: numPlayers }, (_, i) => ({
     name: `Player ${i + 1}`,
     numSquares: Math.floor(100 / numPlayers),
   }));
 };
 
-const getTotalSquares = (players: [playerStateVar]) => {
+const getTotalSquares = (players: playerStateVar[]) => {
   return players.reduce((prev, cur) => prev + cur.numSquares, 0);
 };
 
-export default function PlayerInputsClient() {
+export default function GridBuilderClient() {
   const searchParams = useSearchParams();
-  let numPlayers = parseInt(searchParams.get("num-players"));
+  let numPlayers = parseInt(searchParams.get("num-players") || "2");
   if (numPlayers > 100) numPlayers = 100;
 
   const [trueNumPlayers, setTrueNumPlayers] = useState<number>(numPlayers);
@@ -65,12 +61,13 @@ export default function PlayerInputsClient() {
     });
   };
 
-  const handlePaste = (event) => {
-    const clipboardData = event.clipboardData || window.clipboardData;
+  const handlePaste = (event: ClipboardEvent<HTMLDivElement>) => {
+    // eslint-disable-next-line
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
     const formatted = clipboardData
       .getData("text")
       .split("\n")
-      .map((e) => {
+      .map((e: string) => {
         const [name, numSquares] = e.split("\t");
         return {
           name,
@@ -83,7 +80,7 @@ export default function PlayerInputsClient() {
 
   const handleGenerate = () => {
     const canvas = canvasRef?.current;
-    generateGrid(canvas, players, homeTeam, awayTeam);
+    if (canvas) generateGrid(canvas, players, homeTeam, awayTeam);
   };
 
   const saveImage = () => {

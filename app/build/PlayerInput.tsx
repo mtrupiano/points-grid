@@ -1,4 +1,5 @@
 import { TextField } from "@mui/material";
+import { ChangeEvent } from "react";
 
 export default function PlayerInput({
   playerName,
@@ -11,11 +12,15 @@ export default function PlayerInput({
   numSquares: number;
   handleChangeNumSquares: (newNumSquares: number) => void;
 }) {
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === "player-name") {
       handleChangePlayerName(e.target.value);
     } else if (e.target.name === "num-squares") {
-      handleChangeNumSquares(parseInt(e.target.value));
+      if (!e?.target?.value) {
+        handleChangeNumSquares(0);
+      } else {
+        handleChangeNumSquares(parseInt(e.target.value));
+      }
     }
   };
   return (

@@ -1,7 +1,8 @@
 import calculateGrid from "../lib/calculateGrid";
+import { playerStateVar } from "./types";
 export default function generateGrid(
   canvas: HTMLCanvasElement,
-  players: [{ name: string; numSquares: number }],
+  players: playerStateVar[],
   homeTeam: string = "Home",
   awayTeam: string = "Away",
 ) {
@@ -48,12 +49,12 @@ export default function generateGrid(
 
     for (let i = 0; i < 10; i++) {
       context.fillText(
-        i,
+        `${i}`,
         squareSize / 2 + offset + i * squareSize,
         (3 * offset) / 4,
       );
       context.fillText(
-        i,
+        `${i}`,
         (3 * offset) / 4,
         offset + squareSize / 2 + i * squareSize,
       );

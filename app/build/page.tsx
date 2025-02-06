@@ -1,5 +1,10 @@
-import PlayerInputsClient from "./GridBuilderClient";
+import { Suspense } from "react";
+import GridBuilderClient from "./GridBuilderClient";
 
 export default async function Page() {
-  return <PlayerInputsClient />;
+  return (
+    <Suspense>
+      <GridBuilderClient />
+    </Suspense>
+  );
 }

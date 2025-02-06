@@ -1,6 +1,6 @@
-export default function calculateGrid(
-  players: [{ name: string; numSquares: number }],
-): string[] {
+import { playerStateVar } from "../build/types";
+
+export default function calculateGrid(players: playerStateVar[]): string[] {
   const arr = [];
   for (let i = 0; i < players.length; i++) {
     for (let j = 0; j < players[i].numSquares; j++) {
