@@ -1,4 +1,4 @@
-import { playerStateVar } from "../build/types";
+import { playerStateVar } from "./types";
 
 export default function calculateGrid(players: playerStateVar[]): string[][] {
   const arr = [];

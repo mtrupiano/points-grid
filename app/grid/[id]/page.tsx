@@ -1,5 +1,5 @@
 import getGrid from "./actions/getGrid";
-import GridClient from "./GridClient";
+import Grid from "@/app/components/Grid";
 
 export default async function Page({
   params,
@@ -8,9 +8,10 @@ export default async function Page({
 }) {
   const id = (await params).id;
   const queryResult = await getGrid(id);
+  const gridData = JSON.parse(queryResult?.data?.[0]?.json);
   return (
     <div>
-      <GridClient gridJson={queryResult?.data?.[0]?.json} />
+      <Grid gridData={gridData} />
     </div>
   );
 }

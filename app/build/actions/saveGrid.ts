@@ -1,10 +1,12 @@
 "use server";
-import { createClient } from "../../utils/supabase/server";
+import { playerStateVar } from "@/app/lib/types";
+import { createClient } from "@/app/utils/supabase/server";
 
 export async function saveGrid(data: {
   homeTeam: string;
   awayTeam: string;
   grid: string[][];
+  players: playerStateVar[];
 }) {
   const supabase = await createClient();
   const result = await supabase

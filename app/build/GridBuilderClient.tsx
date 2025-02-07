@@ -4,7 +4,7 @@ import { ClipboardEvent, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button, TextField } from "@mui/material";
 import PlayerInput from "./PlayerInput";
-import { playerStateVar } from "./types";
+import { playerStateVar } from "../lib/types";
 import { saveGrid } from "./actions/saveGrid";
 import drawGrid from "../lib/drawGrid";
 import calculateGrid from "../lib/calculateGrid";
@@ -89,6 +89,7 @@ export default function GridBuilderClient() {
       homeTeam,
       awayTeam,
       grid,
+      players,
     });
     setSavedGridId(result?.data?.[0]?.id);
   };
