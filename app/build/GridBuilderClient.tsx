@@ -90,8 +90,7 @@ export default function GridBuilderClient() {
       awayTeam,
       grid,
     });
-    console.log({ result });
-    setSavedGridId(result.data[0].id);
+    setSavedGridId(result?.data?.[0]?.id);
   };
 
   const saveImage = () => {

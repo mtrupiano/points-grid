@@ -15,7 +15,7 @@ export default function calculateGrid(players: playerStateVar[]): string[][] {
     arr.splice(pick, 1);
   }
 
-  const result = [];
+  const result: string[][] = [];
   for (let i = 0; i < 10; i++) {
     result.push([]);
     for (let j = 0; j < 10; j++) {

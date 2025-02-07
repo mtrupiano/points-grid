@@ -10,7 +10,7 @@ export default async function Page({
   const queryResult = await getGrid(id);
   return (
     <div>
-      <GridClient gridJson={queryResult?.data[0].json} />
+      <GridClient gridJson={queryResult?.data?.[0]?.json} />
     </div>
   );
 }
