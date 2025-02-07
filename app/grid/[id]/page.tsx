@@ -11,7 +11,7 @@ export default async function Page({
   const gridData = JSON.parse(queryResult?.data?.[0]?.json);
   return (
     <div>
-      <Grid gridData={gridData} />
+      <Grid gridData={gridData} gridDbId={id} />
     </div>
   );
 }

@@ -3,7 +3,13 @@ import { useState, useRef } from "react";
 import html2canvas from "html2canvas";
 import { GridData } from "../lib/types";
 
-export default function Grid({ gridData }: { gridData: GridData }) {
+export default function Grid({
+  gridData,
+  gridDbId,
+}: {
+  gridData: GridData;
+  gridDbId: string;
+}) {
   const [hoveredPlayer, setHoveredPlayer] = useState<string | null>(null);
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const [hoveredCol, setHoveredCol] = useState<number | null>(null);
@@ -35,75 +41,85 @@ export default function Grid({ gridData }: { gridData: GridData }) {
 
   return (
     <div className="p-2 flex space-x-4">
-      <div className="flex mx-2" id="grid-container" ref={gridContainerRef}>
-        <div className="text-4xl transform -rotate-90 flex justify-center items-center w-16">
-          {awayTeam}
-        </div>
-        <div>
-          <div className="flex justify-center text-4xl h-12">{homeTeam}</div>
-          <div className="flex border border-slate-500">
-            <div className="w-8 border-x border-slate-500"></div>
-            {new Array(10).fill(0).map((e, colIdx) => (
-              <div
-                key={`column-${colIdx}`}
-                className={`${
-                  hoveredCol === colIdx ? "bg-yellow-100" : ""
-                } border-x border-slate-500 flex justify-center`}
-              >
-                <div className="text-2xl w-24 mx-1 flex justify-center">
-                  {colIdx}
-                </div>
-              </div>
-            ))}
+      <div ref={gridContainerRef}>
+        <div className="flex mx-2">
+          <div className="text-4xl transform -rotate-90 flex justify-center items-center w-16">
+            {awayTeam}
           </div>
-
-          {grid.map((row, rowIdx) => (
-            <div key={`row-${rowIdx}`} className="flex border border-slate-500">
-              <div
-                className={`${
-                  hoveredRow === rowIdx ? "bg-yellow-100" : ""
-                } flex items-center justify-center text-2xl w-8 border-x border-slate-500`}
-              >
-                {rowIdx}
-              </div>
-              {row.map((player, colIdx) => (
+          <div>
+            <div className="flex justify-center text-4xl h-12">{homeTeam}</div>
+            <div className="flex border border-slate-500">
+              <div className="w-8 border-x border-slate-500"></div>
+              {new Array(10).fill(0).map((e, colIdx) => (
                 <div
-                  key={`player-${rowIdx}-${colIdx}`}
-                  className="border-x border-slate-500"
+                  key={`column-${colIdx}`}
+                  className={`${
+                    hoveredCol === colIdx ? "bg-yellow-100" : ""
+                  } border-x border-slate-500 flex justify-center`}
                 >
-                  <div
-                    className={`
-                  ${hoveredPlayer === player ? "bg-slate-100" : ""} 
-                  ${selectedPlayer === player ? "bg-yellow-200" : ""}
-                  transition 
-                  duration-150 
-                  h-24 
-                  w-24 
-                  rounded-md 
-                  flex 
-                  justify-center
-                  cursor-pointer
-                  items-center
-                  m-1
-                `}
-                    onMouseEnter={() => {
-                      setHoveredPlayer(player);
-                      setHoveredRow(rowIdx);
-                      setHoveredCol(colIdx);
-                    }}
-                    onMouseLeave={() => {
-                      setHoveredPlayer(null);
-                      setHoveredRow(null);
-                      setHoveredCol(null);
-                    }}
-                    onClick={() => handleSelectPlayer(player)}
-                  >
-                    <p>{player}</p>
+                  <div className="text-2xl w-24 mx-1 flex justify-center">
+                    {colIdx}
                   </div>
                 </div>
               ))}
             </div>
-          ))}
+
+            {grid.map((row, rowIdx) => (
+              <div
+                key={`row-${rowIdx}`}
+                className="flex border border-slate-500"
+              >
+                <div
+                  className={`${
+                    hoveredRow === rowIdx ? "bg-yellow-100" : ""
+                  } flex items-center justify-center text-2xl w-8 border-x border-slate-500`}
+                >
+                  {rowIdx}
+                </div>
+                {row.map((player, colIdx) => (
+                  <div
+                    key={`player-${rowIdx}-${colIdx}`}
+                    className="border-x border-slate-500"
+                  >
+                    <div
+                      className={`
+                    ${hoveredPlayer === player ? "bg-slate-100" : ""} 
+                    ${selectedPlayer === player ? "bg-yellow-200" : ""}
+                    transition 
+                    duration-150 
+                    h-24 
+                    w-24 
+                    rounded-md 
+                    flex 
+                    justify-center
+                    cursor-pointer
+                    items-center
+                    m-1
+                  `}
+                      onMouseEnter={() => {
+                        setHoveredPlayer(player);
+                        setHoveredRow(rowIdx);
+                        setHoveredCol(colIdx);
+                      }}
+                      onMouseLeave={() => {
+                        setHoveredPlayer(null);
+                        setHoveredRow(null);
+                        setHoveredCol(null);
+                      }}
+                      onClick={() => handleSelectPlayer(player)}
+                    >
+                      <p>{player}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex justify-center py-2 mb-4">
+          <a href={`https://points-grid-rc25.vercel.app/grid/${gridDbId}`}>
+            {`https://points-grid-rc25.vercel.app/grid/${gridDbId}`}
+          </a>
         </div>
       </div>
 
