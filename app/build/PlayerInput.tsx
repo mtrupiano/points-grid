@@ -1,5 +1,5 @@
-import { TextField } from "@mui/material";
 import { ChangeEvent } from "react";
+import TailwindInput from "@/app/components/TailwindInput";
 
 export default function PlayerInput({
   playerName,
@@ -23,14 +23,15 @@ export default function PlayerInput({
       }
     }
   };
+
   return (
-    <div>
-      <TextField
+    <div className="flex space-x-2 w-96">
+      <TailwindInput
         name="player-name"
         value={playerName}
         onChange={handleChange}
       />
-      <TextField
+      <TailwindInput
         name="num-squares"
         value={numSquares}
         onChange={handleChange}

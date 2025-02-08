@@ -1,12 +1,13 @@
 "use client";
 
-import { ClipboardEvent, useState } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useSearchParams } from "next/navigation";
-import { Button, TextField } from "@mui/material";
 import PlayerInput from "./PlayerInput";
 import { saveGrid } from "./actions/saveGrid";
 import calculateGrid from "@/app/lib/calculateGrid";
 import { playerStateVar } from "@/app/lib/types";
+import TailwindButton from "@/app/components/TailwindButton";
+import TailwindInput from "../components/TailwindInput";
 
 const initPlayersArr = (numPlayers: number): playerStateVar[] => {
   return Array.from({ length: numPlayers }, (_, i) => ({
@@ -62,7 +63,7 @@ export default function GridBuilderClient() {
     });
   };
 
-  const handlePaste = (event: ClipboardEvent<HTMLDivElement>) => {
+  const handlePaste = (event: ClipboardEvent) => {
     // eslint-disable-next-line
     const clipboardData = event.clipboardData || (window as any).clipboardData;
     const formatted = clipboardData
@@ -90,50 +91,76 @@ export default function GridBuilderClient() {
     setSavedGridId(result?.data?.[0]?.id);
   };
 
+  useEffect(() => {
+    window.addEventListener("paste", handlePaste);
+
+    return () => {
+      window.removeEventListener("paste", handlePaste);
+    };
+  }, []);
+
   return (
     <div>
-      <div
-        onPaste={handlePaste}
-        style={{
-          position: "absolute",
-          left: "0",
-          top: "0",
-          width: "100vw",
-          height: "100vh",
-        }}
-      />
-      <TextField
-        label="Home"
-        value={homeTeam}
-        onChange={(e) => setHomeTeam(e.target.value)}
-      />
-      <TextField
-        label="Away"
-        value={awayTeam}
-        onChange={(e) => setAwayTeam(e.target.value)}
-      />
-      {getTotalSquares(players)}
-      <Button onClick={handleDistributeEqually}>Distribute Equally</Button>
-      {players.map((player, idx) => (
-        <PlayerInput
-          key={idx}
-          playerName={players[idx].name}
-          numSquares={players[idx].numSquares}
-          handleChangeNumSquares={handleChangeNumSquares(idx)}
-          handleChangePlayerName={handleChangePlayerName(idx)}
-        />
-      ))}
-
-      <Button onClick={handleAddPlayer}>Add Player</Button>
-      <Button
-        onClick={handleGenerate}
-        disabled={getTotalSquares(players) !== 100}
-      >
-        Generate
-      </Button>
-      {savedGridId && (
-        <Button href={`/grid/${savedGridId}`}>View your grid here</Button>
-      )}
+      <div className="flex space-x-2 m-2">
+        <div className="w-full max-w-sm min-w-[200px]">
+          <TailwindInput
+            value={homeTeam}
+            placeholder="Home"
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setHomeTeam(e.target.value)
+            }
+          />
+        </div>
+        <div className="flex justify-center items-center"> vs. </div>
+        <div className="w-full max-w-sm min-w-[200px]">
+          <TailwindInput
+            value={awayTeam}
+            placeholder="Away"
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setAwayTeam(e.target.value)
+            }
+          />
+        </div>
+      </div>
+      <div className="m-2">
+        Squares claimed:{" "}
+        <span className="font-bold">{getTotalSquares(players)}</span>
+        {" / 100"}
+        <TailwindButton onClick={handleDistributeEqually} type="button">
+          Distribute Equally
+        </TailwindButton>
+      </div>
+      <div className="space-y-2 m-2" id="player-input-container">
+        {players.map((player, idx) => (
+          <PlayerInput
+            key={idx}
+            playerName={players[idx].name}
+            numSquares={players[idx].numSquares}
+            handleChangeNumSquares={handleChangeNumSquares(idx)}
+            handleChangePlayerName={handleChangePlayerName(idx)}
+          />
+        ))}
+      </div>
+      <div className="space-x-2 flex my-2">
+        <TailwindButton onClick={handleAddPlayer}>Add Player</TailwindButton>
+        <TailwindButton
+          onClick={handleGenerate}
+          disabled={getTotalSquares(players) !== 100}
+        >
+          Generate Grid
+        </TailwindButton>
+        <a
+          href={`/grid/${savedGridId}`}
+          className={
+            "rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all duration-150 shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2" +
+            (!savedGridId
+              ? "pointer-events-none cursor-default opacity-50 shadow-none hover:shadow-none hover:bg-slate-800"
+              : "")
+          }
+        >
+          View your grid here
+        </a>
+      </div>
     </div>
   );
 }
