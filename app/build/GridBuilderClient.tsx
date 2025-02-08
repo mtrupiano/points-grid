@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect, ChangeEvent } from "react";
-import { useSearchParams } from "next/navigation";
-import PlayerInput from "./PlayerInput";
-import { saveGrid } from "./actions/saveGrid";
+import { useSearchParams, useRouter } from "next/navigation";
 import calculateGrid from "@/app/lib/calculateGrid";
 import { playerStateVar } from "@/app/lib/types";
 import TailwindButton from "@/app/components/TailwindButton";
-import TailwindInput from "../components/TailwindInput";
+import TailwindInput from "@/app/components/TailwindInput";
+import { saveGrid } from "./actions/saveGrid";
+import PlayerInput from "./PlayerInput";
 
 const initPlayersArr = (numPlayers: number): playerStateVar[] => {
   return Array.from({ length: numPlayers }, (_, i) => ({
@@ -31,7 +31,7 @@ export default function GridBuilderClient() {
   );
   const [homeTeam, setHomeTeam] = useState("Home");
   const [awayTeam, setAwayTeam] = useState("Away");
-  const [savedGridId, setSavedGridId] = useState(null);
+  const router = useRouter();
 
   const handleChangePlayerName = (idx: number) => (newPlayerName: string) => {
     players[idx].name = newPlayerName;
@@ -88,7 +88,10 @@ export default function GridBuilderClient() {
       grid,
       players,
     });
-    setSavedGridId(result?.data?.[0]?.id);
+    const id = result?.data?.[0]?.id;
+    if (id) {
+      router.push(`/grid/${id}`);
+    }
   };
 
   useEffect(() => {
@@ -98,6 +101,8 @@ export default function GridBuilderClient() {
       window.removeEventListener("paste", handlePaste);
     };
   }, []);
+
+  const totalSquares = getTotalSquares(players);
 
   return (
     <div>
@@ -124,7 +129,15 @@ export default function GridBuilderClient() {
       </div>
       <div className="m-2">
         Squares claimed:{" "}
-        <span className="font-bold">{getTotalSquares(players)}</span>
+        <span
+          className={`font-bold rounded-md border-2 p-2 ${
+            totalSquares === 100
+              ? "text-green-600 border-green-600"
+              : "text-red-600 border-red-600"
+          }`}
+        >
+          {totalSquares}
+        </span>
         {" / 100"}
         <TailwindButton onClick={handleDistributeEqually} type="button">
           Distribute Equally
@@ -145,21 +158,10 @@ export default function GridBuilderClient() {
         <TailwindButton onClick={handleAddPlayer}>Add Player</TailwindButton>
         <TailwindButton
           onClick={handleGenerate}
-          disabled={getTotalSquares(players) !== 100}
+          disabled={totalSquares !== 100}
         >
-          Generate Grid
+          Get My Grid
         </TailwindButton>
-        <a
-          href={`/grid/${savedGridId}`}
-          className={
-            "rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all duration-150 shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2" +
-            (!savedGridId
-              ? "pointer-events-none cursor-default opacity-50 shadow-none hover:shadow-none hover:bg-slate-800"
-              : "")
-          }
-        >
-          View your grid here
-        </a>
       </div>
     </div>
   );
