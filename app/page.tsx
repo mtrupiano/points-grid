@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
+import TailwindButton from "./components/TailwindButton";
 
 export default function Home() {
   const [numPlayers, setNumPlayers] = useState(2);
@@ -42,9 +43,7 @@ export default function Home() {
         </div>
         <div className="w-full flex justify-center">
           <Link href={`/build?num-players=${numPlayers}`}>
-            <button className="hover:bg-slate-200 transition duration-150 w-12 rounded-md p-2 hover:ring-2 hover:ring-slate-200 focus:ring-2 focus:ring-slate-100 active:ring-2 active:ring-slate-100">
-              Go
-            </button>
+            <TailwindButton>Go</TailwindButton>
           </Link>
         </div>
       </div>

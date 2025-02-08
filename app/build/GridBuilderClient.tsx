@@ -48,10 +48,16 @@ export default function GridBuilderClient() {
     setPlayers([
       ...players,
       {
-        name: `Player ${players.length + 1}`,
+        name: "Player",
         numSquares: 10,
       },
     ]);
+  };
+
+  const handleRemovePlayer = (idx: number) => {
+    setTrueNumPlayers(trueNumPlayers - 1);
+    players.splice(idx, 1);
+    setPlayers([...players]);
   };
 
   const handleDistributeEqually = () => {
@@ -151,6 +157,7 @@ export default function GridBuilderClient() {
             numSquares={players[idx].numSquares}
             handleChangeNumSquares={handleChangeNumSquares(idx)}
             handleChangePlayerName={handleChangePlayerName(idx)}
+            handleRemovePlayer={() => handleRemovePlayer(idx)}
           />
         ))}
       </div>
