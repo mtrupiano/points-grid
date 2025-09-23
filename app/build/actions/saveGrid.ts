@@ -9,6 +9,9 @@ export async function saveGrid(data: {
   players: playerStateVar[];
 }) {
   const supabase = await createClient();
+  if (!supabase) {
+    throw new Error("Failed to connect to supabase client");
+  }
   const result = await supabase
     .from("grids")
     .insert({
