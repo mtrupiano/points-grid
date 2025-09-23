@@ -117,8 +117,8 @@ export default function Grid({
           </div>
         </div>
         <div className="flex justify-center py-2 mb-4">
-          <a href={`https://points-grid-rc25.vercel.app/grid/${gridDbId}`}>
-            {`https://points-grid-rc25.vercel.app/grid/${gridDbId}`}
+          <a href={`https://points-grid.vercel.app/grid/${gridDbId}`}>
+            {`https://points-grid.vercel.app/grid/${gridDbId}`}
           </a>
         </div>
       </div>
