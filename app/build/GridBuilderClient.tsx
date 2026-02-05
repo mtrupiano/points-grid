@@ -45,14 +45,14 @@ export default function GridBuilderClient() {
   };
 
   const handleAddPlayer = () => {
-    setTrueNumPlayers(trueNumPlayers + 1);
     setPlayers([
       ...players,
       {
-        name: "Player",
+        name: `Player ${trueNumPlayers + 1}`,
         numSquares: 10,
       },
     ]);
+    setTrueNumPlayers(trueNumPlayers + 1);
   };
 
   const handleRemovePlayer = (idx: number) => {
