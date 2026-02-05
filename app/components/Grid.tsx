@@ -139,6 +139,7 @@ export default function Grid({
                       <p>{player}</p>
                       <div
                         className={`${isSelected(rowIdx, colIdx) ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 absolute bottom-full mb-1 pointer-events-none`}
+                        data-html2canvas-ignore="true"
                       >
                         <div
                           role="tooltip"
