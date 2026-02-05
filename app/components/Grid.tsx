@@ -14,16 +14,38 @@ export default function Grid({
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const [hoveredCol, setHoveredCol] = useState<number | null>(null);
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
+  const [selectedSquare, setSelectedSquare] = useState<number[] | null>(null);
   const { homeTeam, awayTeam, grid, players } = gridData;
   const gridContainerRef = useRef(null);
 
-  const handleSelectPlayer = (playerName: string) => {
+  const handleSelectPlayerFromList = (playerName: string) => {
+    setSelectedSquare(null);
     if (selectedPlayer === playerName) {
       setSelectedPlayer(null);
     } else {
       setSelectedPlayer(playerName);
     }
   };
+
+  const handleSelectSquare = (
+    rowIdx: number,
+    colIdx: number,
+    playerName: string,
+  ) => {
+    if (isSelected(rowIdx, colIdx)) {
+      setSelectedSquare(null);
+    } else {
+      setSelectedSquare([rowIdx, colIdx]);
+    }
+    if (playerName !== selectedPlayer) {
+      setSelectedPlayer(playerName);
+    }
+  };
+
+  const isSelected = (rowIdx: number, colIdx: number) =>
+    selectedSquare &&
+    selectedSquare[0] === rowIdx &&
+    selectedSquare[1] === colIdx;
 
   const handleDownloadImage = async () => {
     const element = gridContainerRef?.current;
@@ -84,21 +106,24 @@ export default function Grid({
                     key={`player-${rowIdx}-${colIdx}`}
                     className="border-x border-slate-500"
                   >
-                    <div
+                    <button
                       className={`
-                    ${hoveredPlayer === player ? "bg-slate-100" : ""} 
-                    ${selectedPlayer === player ? "bg-yellow-200" : ""}
-                    transition 
-                    duration-150 
-                    h-24 
-                    w-24 
-                    rounded-md 
-                    flex 
-                    justify-center
-                    cursor-pointer
-                    items-center
-                    m-1
-                  `}
+                        ${hoveredPlayer === player ? "bg-slate-100" : ""} 
+                        ${selectedPlayer === player ? "bg-yellow-200" : ""}
+                        transition 
+                        duration-150 
+                        h-24 
+                        w-24 
+                        rounded-md 
+                        flex 
+                        justify-center
+                        cursor-pointer
+                        items-center
+                        m-1
+                        group
+                        relative
+                      `}
+                      data-tooltip-target={`tooltip-${rowIdx}-${colIdx}`}
                       onMouseEnter={() => {
                         setHoveredPlayer(player);
                         setHoveredRow(rowIdx);
@@ -109,10 +134,22 @@ export default function Grid({
                         setHoveredRow(null);
                         setHoveredCol(null);
                       }}
-                      onClick={() => handleSelectPlayer(player)}
+                      onClick={() => handleSelectSquare(rowIdx, colIdx, player)}
                     >
                       <p>{player}</p>
-                    </div>
+                      <div
+                        className={`${isSelected(rowIdx, colIdx) ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 absolute bottom-full mb-1 pointer-events-none`}
+                      >
+                        <div
+                          role="tooltip"
+                          id={`tooltip-${rowIdx}-${colIdx}`}
+                          className="text-sm py-1 px-2 bg-slate-800 text-white rounded-md whitespace-nowrap"
+                        >
+                          {`${homeTeam} *${colIdx} - ${awayTeam} *${rowIdx}`}
+                        </div>
+                        <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-t-4 border-t-slate-800"></div>
+                      </div>
+                    </button>
                   </div>
                 ))}
               </div>
@@ -137,7 +174,7 @@ export default function Grid({
               } py-1 px-3 rounded-md hover:bg-slate-100 transition duration-150 cursor-pointer`}
               onMouseEnter={() => setHoveredPlayer(player.name)}
               onMouseLeave={() => setHoveredPlayer(null)}
-              onClick={() => handleSelectPlayer(player.name)}
+              onClick={() => handleSelectPlayerFromList(player.name)}
             >
               {player.name} ({player.numSquares})
             </div>
