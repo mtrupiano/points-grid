@@ -42,8 +42,11 @@ export default function Grid({
   return (
     <div className="p-2 flex space-x-4">
       <div ref={gridContainerRef}>
-        <div className="flex mx-2">
-          <div className="text-4xl transform -rotate-90 flex justify-center items-center w-16">
+        <div className="flex">
+          <div
+            style={{ writingMode: "sideways-lr" }}
+            className="flex justify-center text-4xl w-12"
+          >
             {awayTeam}
           </div>
           <div>
