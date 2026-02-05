@@ -164,31 +164,37 @@ export default function Grid({
         </div>
       </div>
 
-      <div>
-        <div className="h-12"></div>
-        <div className="flex flex-col space-y-1">
-          {players.map((player, idx) => (
-            <div
-              key={`player-list-${idx}`}
-              className={`${
-                selectedPlayer === player.name ? "bg-yellow-200" : ""
-              } py-1 px-3 rounded-md hover:bg-slate-100 transition duration-150 cursor-pointer`}
-              onMouseEnter={() => setHoveredPlayer(player.name)}
-              onMouseLeave={() => setHoveredPlayer(null)}
-              onClick={() => handleSelectPlayerFromList(player.name)}
-            >
-              {player.name} ({player.numSquares})
-            </div>
-          ))}
-          <div className="flex justify-center">
-            <button
-              className="hover:bg-slate-300 transition duration-150 rounded-md w-fit py-1 px-3 text-2xl"
-              onClick={handleDownloadImage}
-            >
-              Save
-            </button>
+      <div className="mt-12 flex flex-col space-y-1 items-center">
+        {players.map((player, idx) => (
+          <div
+            key={`player-list-${idx}`}
+            className={`${
+              selectedPlayer === player.name ? "bg-yellow-200" : ""
+            } py-1 px-3 rounded-md hover:bg-slate-100 transition duration-150 cursor-pointer`}
+            onMouseEnter={() => setHoveredPlayer(player.name)}
+            onMouseLeave={() => setHoveredPlayer(null)}
+            onClick={() => handleSelectPlayerFromList(player.name)}
+          >
+            {player.name} ({player.numSquares})
           </div>
-        </div>
+        ))}
+
+        <button
+          className="hover:bg-slate-300 transition duration-150 rounded-md w-fit py-1 px-3 text-2xl"
+          onClick={handleDownloadImage}
+        >
+          Save
+        </button>
+        <button
+          className="hover:bg-slate-300 transition duration-150 rounded-md w-fit py-1 px-3 text-2xl"
+          onClick={() =>
+            navigator.clipboard.writeText(
+              `https://points-grid.vercel.app/grid/${gridDbId}`,
+            )
+          }
+        >
+          Copy Link
+        </button>
       </div>
     </div>
   );
