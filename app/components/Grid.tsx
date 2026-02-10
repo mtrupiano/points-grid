@@ -186,7 +186,7 @@ export default function Grid({
           Save
         </button>
         <button
-          className="hover:bg-slate-300 transition duration-150 rounded-md w-fit py-1 px-3 text-2xl"
+          className="hover:bg-slate-300 transition-all duration-200 rounded-md w-fit py-1 px-3 text-2xl hover:ring-offset-2 active:ring-2 active:ring-slate-600"
           onClick={() =>
             navigator.clipboard.writeText(
               `https://points-grid.vercel.app/grid/${gridDbId}`,
