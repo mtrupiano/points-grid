@@ -54,7 +54,10 @@ export default function Grid({
       const dataURL = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.href = dataURL;
-      link.download = "grid.png";
+      link.download = `${homeTeam}_vs_${awayTeam}_${new Date()
+        .toISOString()
+        .replace(/[^0-9]/g, "")
+        .slice(0, -3)}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
